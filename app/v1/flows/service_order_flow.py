@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from app.v1.exceptions.entity_not_found import EntityNotFound
-from app.v1.schemas.service_order_model import ServiceOrder
+from models.service_order_model import ServiceOrder
 from tools.service_orders_states_machine import ServiceOrderStatesMachine
 
 class ServiceOrderFlow:

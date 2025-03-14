@@ -1,6 +1,7 @@
-from app.v1.schemas.vehicle_model import Vehicle
-from pydantic import BaseModel, Optional
+from models.vehicle_model import Vehicle
+from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 
 class Payment(BaseModel):
