@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "ef04cbbc-efe6-40dc-be03-9e602c6bf3da",
+		"name": "Service-Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14821039"
+	},
+	"item": [
+		{
+			"name": "Create Service Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"millage\": 1000,\r\n    \"vehicle_id\":\"c1c60720-51c4-5319-8924-ff4e0c9e0ae8\",\r\n    \"service_date\":\"2025-03-15\",\r\n    \"notes\":[\"Urgent service required.\"],\r\n    \"scheduled_date\":\"2025-03-14\",\r\n    \"service_type\": \"Oil change\",\r\n    \"service_description\": \"Rutine oil change\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/v1/service-orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"service-orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Service Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/v1/service-orders/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"service-orders",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by queries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/v1/service-orders?vehicle._id=c1c60720-51c4-5319-8924-ff4e0c9e0ae8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"service-orders"
+					],
+					"query": [
+						{
+							"key": "vehicle._id",
+							"value": "c1c60720-51c4-5319-8924-ff4e0c9e0ae8"
+						}
+					]
+				},
+				"description": "Get Specific Service Order"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Order",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\":\"OPEND\",\r\n    \"notes\":[\"Se lo comio el perro\", \"Dos veces\"]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/v1/service-orders/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"service-orders",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
