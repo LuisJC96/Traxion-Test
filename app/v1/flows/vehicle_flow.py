@@ -8,8 +8,8 @@ from datetime import datetime
 class VehicleFlow:
     def __init__(self, client: MongoClient):
         self.client = client
-        self.db = self.client["vehicle_management"]
-        self.collection = self.db["vehicles"]
+        self.db = self.client.vehicle_management
+        self.collection = self.db.vehicles
 
 
     def create_vehicle(self, vehicle:dict):

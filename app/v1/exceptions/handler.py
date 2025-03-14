@@ -22,10 +22,12 @@ def exception_handler(response_status:StatusCode = StatusCode.OK):
                     "timestamp": timestamp,
                 }).encode("utf-8")
             except Exception as error:
+                import traceback
+                traceback.format_exc()
                 response.status_code = StatusCode.INTERNAL_SERVER_ERROR.value
                 response.body  = json.dumps({
                     "status_code": StatusCode.INTERNAL_SERVER_ERROR.value,
-                    "detail": str(error),
+                    "detail": str(traceback.format_exc()),
                     "timestamp": timestamp,
                 }).encode("utf-8")
             return response

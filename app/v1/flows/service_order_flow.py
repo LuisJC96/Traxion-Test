@@ -9,8 +9,8 @@ from app.v1.flows.vehicle_flow import VehicleFlow
 class ServiceOrderFlow:
     def __init__(self, client: MongoClient):
         self.client = client
-        self.db = self.client["vehicle_management"]
-        self.collection = self.db["service_orders"]
+        self.db = self.client.vehicle_management
+        self.collection = self.db.service_orders
 
 
     def __create_order_dict(self, service_order, vehicle_info):
