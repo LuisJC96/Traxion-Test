@@ -1,17 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional, List
+import uuid
 
-
-
-class ServiceSummary(BaseModel):
-    date: str
-    millage: int
-    service_description: str
-    technician: str
-    involved_parts: Optional[List[str]] = Field(
-        [], description="List of involved parts on the given service")
-    spare_parts: Optional[List[str]] = Field(
-        [], description="List of used spare parts on the given service")
 
 class Registration(BaseModel):
     country: str
@@ -19,11 +9,23 @@ class Registration(BaseModel):
     plate_number: str
 
 class Vehicle(BaseModel):
-    id: str
     brand: str
     model: str
     year: int
-    is_active: bool
-    maintenance_history:Optional[List[ServiceSummary]] = Field(
-        [], description="list of previous given services to the vehicle")
+    is_active: bool = True
     registration: Registration
+
+    @model_validator(mode='before')
+    def generate_id(cls, values):
+        #generates id based on fields to avoid duplication of vehicles
+        build_str = (
+                values.get("registration").get("country")+
+               values.get("registration").get("plate_number")+
+                values.get("registration").get("state")+
+                values.get("brand")+
+                values.get("model")+
+                values.get("year")
+        )
+        values["_id"] = uuid.uuid5(uuid.NAMESPACE_OID, build_str)
+        return values
+
