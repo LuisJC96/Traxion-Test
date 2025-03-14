@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from app.v1.exceptions.entity_not_found import EntityNotFound
-from app.v1.schemas.vehicle_model import Vehicle
+from models.vehicle_model import Vehicle
 
 class VehicleFlow:
     def __init__(self, client: MongoClient):
