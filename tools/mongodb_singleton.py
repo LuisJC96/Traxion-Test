@@ -14,7 +14,7 @@ class MongoDBSingleton:
         return cls._client
 
     @classmethod
-    def close(cls):
+    def close_client(cls):
         """Close the MongoDB client connection."""
         if cls._client:
             cls._client.close()
