@@ -1,12 +1,9 @@
-from models.vehicle_model import Vehicle
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
+from models.vehicle_model import Registration, Vehicle
+from pydantic import BaseModel, Field
 
 
-class VehiclePost(BaseModel):
-    id: str
-
-
-class VehiclePatch(BaseModel):
-    id: str
+class VehiclePostRequest(BaseModel):
+    brand: str
+    model: str
+    year: int
+    registration: Registration

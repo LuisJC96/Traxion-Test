@@ -3,6 +3,7 @@ from pymongo.errors import DuplicateKeyError
 from app.v1.exceptions.entity_not_found import EntityNotFound
 from app.v1.exceptions.duplicated_enity import DuplicatedEntity
 from models.vehicle_model import Vehicle
+from datetime import datetime
 
 class VehicleFlow:
     def __init__(self, client: MongoClient):
@@ -20,8 +21,7 @@ class VehicleFlow:
         return data_to_insert.model_dump(by_alias=True)
 
     def read_vehicle(self, _id):
-        print(_id)
-        filter = {"_id":_id, "is_active":True}
+        filter = {"_id":_id}
         document = self.collection.find_one(filter)
         if not document:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
@@ -36,7 +36,8 @@ class VehicleFlow:
             filter,
             {
                 "$set": {
-                    "is_active": False
+                    "is_active": False,
+                    "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 }
             }
         )
