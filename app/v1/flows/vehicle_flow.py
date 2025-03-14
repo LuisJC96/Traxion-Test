@@ -1,5 +1,7 @@
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 from app.v1.exceptions.entity_not_found import EntityNotFound
+from app.v1.exceptions.duplicated_enity import DuplicatedEntity
 from models.vehicle_model import Vehicle
 
 class VehicleFlow:
@@ -10,24 +12,16 @@ class VehicleFlow:
 
 
     def create_vehicle(self, vehicle:dict):
-        vehicle_model = Vehicle(**vehicle)
-        return self.collection.insert_one(vehicle_model.model_dump())
-
-    def update_vehicle(self, _id, data_to_update:dict):
-        filter = {"_id": _id}
-        document = self.collection.find_one(filter)
-        if not document:
-            raise EntityNotFound(self.db.name, self.collection.name, filter)
-        to_update = document.update(data_to_update)
-        return self.collection.update_one(
-            filter,
-            {
-                "$set":to_update
-            }
-        )
+        data_to_insert = Vehicle(**vehicle)
+        try:
+            self.collection.insert_one(data_to_insert.model_dump(by_alias=True))
+        except DuplicateKeyError:
+            raise DuplicatedEntity(self.db.name, self.collection.name, data_to_insert.model_dump(by_alias=True))
+        return data_to_insert.model_dump(by_alias=True)
 
     def read_vehicle(self, _id):
-        filter = {"_id":_id}
+        print(_id)
+        filter = {"_id":_id, "is_active":True}
         document = self.collection.find_one(filter)
         if not document:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
@@ -38,11 +32,12 @@ class VehicleFlow:
         document = self.collection.find_one(filter)
         if not document:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
-        return self.collection.update_one(
+        self.collection.update_one(
             filter,
             {
                 "$set": {
-                    "is_active":False
+                    "is_active": False
                 }
             }
         )
+        return document
