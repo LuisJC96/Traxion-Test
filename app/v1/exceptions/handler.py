@@ -10,26 +10,24 @@ def exception_handler(response_status:StatusCode = StatusCode.OK):
     def wrapper(func):
         @wraps(func)
         async def wrapped_function(request:Request, response:Response, *args, **kwargs):
-            timestamp = datetime.now()
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             try:
                 response.status_code = response_status.value
                 response.body = json.dumps(await func(request, response, *args, **kwargs)).encode("utf-8")
             except ServiceError as error:
                 response.status_code = error.status.value
                 response.body = json.dumps({
-                    "status_code": error.status.value,
+                    "status_code":error.status.value,
+                    "detail": error.detail,
+                    "timestamp": timestamp,
+                }).encode("utf-8")
+            except Exception as error:
+                response.status_code = StatusCode.INTERNAL_SERVER_ERROR.value
+                response.body  = json.dumps({
+                    "status_code": StatusCode.INTERNAL_SERVER_ERROR.value,
                     "detail": str(error),
                     "timestamp": timestamp,
-                })
-
-
-            except Exception as error:
-                response.status_code = response_status
-                response.body  = {
-                    "status_code":StatusCode.INTERNAL_SERVER_ERROR.value,
-                    "detail":str(error),
-                    "timestamp": timestamp,
-                }
+                }).encode("utf-8")
             return response
         return wrapped_function
     return wrapper
