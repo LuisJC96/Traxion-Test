@@ -2,21 +2,21 @@
 class ServiceOrderStatesMachine:
     def __init__(self):
         self.states = [
-            'open',
-            'assigned',
-            'in_progress',
-            'on_hold',
-            'completed',
-            'cancelled'
+            'OPEN',
+            'ASSIGNED',
+            'IN_PROGRESS',
+            'ON_HOLD',
+            'COMPLETED',
+            'CANCELLED'
         ]
 
         self.valid_transitions = {
-            'new': ['new','assigned', 'cancelled'],
-            'assigned': ['assigned','in_progress', 'cancelled'],
-            'in_progress': ['in_progress','on_hold', 'completed', 'cancelled'],
-            'on_hold': ['on_hold', 'in_progress', 'cancelled'],
-            'completed': [],
-            'cancelled': [],
+            'OPEN': ['OPEN','ASSIGNED', 'CANCELLED'],
+            'ASSIGNED': ['ASSIGNED','IN_PROGRESS', 'CANCELLED'],
+            'IN_PROGRESS': ['IN_PROGRESS','ON_HOLD', 'COMPLETED', 'CANCELLED'],
+            'ON_HOLD': ['ON_HOLD', 'IN_PROGRESS', 'CANCELLED'],
+            'COMPLETED': [],
+            'CANCELLED': [],
         }
 
     def validate_transition(self, actual_state, desired_state):
