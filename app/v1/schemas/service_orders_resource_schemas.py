@@ -1,12 +1,25 @@
-from models.vehicle_model import Vehicle
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
-class ServiceOrderPost(BaseModel):
-    id: str
 
-class ServiceOrderPatch(BaseModel):
-    id: str
+class ServiceOrderPostRequest(BaseModel):
+    vehicle_id: str
+    service_date: str
+    notes: Optional[List[str]] = []
+    technician: Optional[str] = None
+    scheduled_date: str
+    millage: float
+    service_type: str
+    service_description: str
+
+class ServiceOrderPatchRequest(BaseModel):
+    state: str
+    scheduled_date: Optional[str]
+    completion_date: Optional[str]
+    service_date: str
+    notes: Optional[List[str]] = []
+    technician: str
+    involved_parts: Optional[List[str]]
+    spare_parts: Optional[List[str]]
 

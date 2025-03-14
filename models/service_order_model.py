@@ -1,34 +1,22 @@
 from models.vehicle_model import Vehicle
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional, List
-
-
-class Payment(BaseModel):
-    amount: float
-    payment_status: str
-    payment_method: str
-
-class Customer(BaseModel):
-    first_name: str
-    last_name: str
-    phone_number: str
-    email: str
+from typing import Optional, List, Literal
+import uuid
 
 class ServiceOrder(BaseModel):
-    id: str
-    state: str
+    id: str = Field(str(uuid.uuid4()), alias="_id")
+    state: Literal['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CANCELLED'] = "OPEN"
     vehicle: Vehicle
-
-    customer: Customer
+    updated_at: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     millage: float
-    notes: Optional[str] = Field(
+    notes: Optional[List[str]] = Field(
         [],
         description="Miscellaneous notes given by either the technician or either person updating the entity")
     technician: Optional[str] = None
-    scheduled_date: datetime
+    scheduled_date: str
     service_date: str
-    completion_date: Optional[datetime] = None
+    completion_date: Optional[str] = None
     service_type: str
     service_description: str
     involved_parts: Optional[List[str]] = Field(
