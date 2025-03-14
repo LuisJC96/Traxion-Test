@@ -54,6 +54,13 @@ class ServiceOrderFlow:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
         return document
 
+    def query_service_offers(self, filters):
+        limit = filters.pop("limit", 20)
+        page = filters.pop("page", 1)
+        skip_documents = (page-1)*limit
+        response = [value for value in self.collection.find(filters).skip(skip_documents).limit(limit)]
+        return response
+
     def delete_service_order(self, _id):
         filter = {"_id": _id}
         document = self.collection.find_one(filter)

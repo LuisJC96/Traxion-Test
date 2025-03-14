@@ -30,6 +30,17 @@ async def get_service_order(
     flow = ServiceOrderFlow(client)
     return flow.read_service_order(service_order_id)
 
+@router.get("")
+@exception_handler()
+async def get_service_orders(
+        request: Request,
+        response: Response,
+        client = Depends(MongoDBSingleton.get_client)
+):
+    flow = ServiceOrderFlow(client)
+    filters = dict(request.query_params)
+    return flow.query_service_offers(filters)
+
 @router.patch("/{service_order_id}")
 @exception_handler()
 async def update_service_order(
