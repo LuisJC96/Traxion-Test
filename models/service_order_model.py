@@ -1,7 +1,7 @@
 from models.vehicle_model import Vehicle
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class Payment(BaseModel):
@@ -18,7 +18,10 @@ class Customer(BaseModel):
 class ServiceDetails(BaseModel):
     service_type: str
     service_description: str
-    replaced_parts: str
+    involved_parts: Optional[List[str]] = Field(
+        [], description="List of involved parts on the given service")
+    spare_parts: Optional[List[str]] = Field(
+        [], description="List of used spare parts on the given service")
 
 class ServiceOrder(BaseModel):
     id: str
@@ -26,7 +29,9 @@ class ServiceOrder(BaseModel):
     vehicle: Vehicle
     service_date: str
     customer: Customer
-    notes: Optional[str]
-    technician: Optional[str]
+    notes: Optional[str] = Field(
+        [],
+        description="Miscellaneous note given by either the technician or either person updating the entity")
+    technician: Optional[str] = None
     scheduled_date: datetime
-    completion_date: Optional[datetime]
+    completion_date: Optional[datetime] = None

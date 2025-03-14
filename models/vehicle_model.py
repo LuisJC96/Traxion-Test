@@ -8,6 +8,10 @@ class ServiceSummary(BaseModel):
     millage: int
     service_description: str
     technician: str
+    involved_parts: Optional[List[str]] = Field(
+        [], description="List of involved parts on the given service")
+    spare_parts: Optional[List[str]] = Field(
+        [], description="List of used spare parts on the given service")
 
 class Registration(BaseModel):
     country: str
