@@ -1,5 +1,7 @@
 from pymongo import MongoClient
+from datetime import datetime
 from app.v1.exceptions.entity_not_found import EntityNotFound
+from app.v1.exceptions.invalid_state_change import InvalidStateChange
 from models.service_order_model import ServiceOrder
 from tools.service_orders_states_machine import ServiceOrderStatesMachine
 from app.v1.flows.vehicle_flow import VehicleFlow
@@ -30,22 +32,36 @@ class ServiceOrderFlow:
         self.collection.insert_one(data_to_upload)
         return data_to_upload
 
+    def __state_change_valid(self, actual_state, wished_state):
+        return  ServiceOrderStatesMachine().validate_transition(actual_state, wished_state)
+
+    def __manage_listed_values(self, document, field:str, new_list):
+        document[field] += new_list
+
     def update_service_order(self, _id, data_to_update:dict):
         filter = {"_id": _id}
         document = self.collection.find_one(filter)
-        if "state" in data_to_update:
-            if not ServiceOrderStatesMachine().validate_transition(document.get("state"), data_to_update.get("state")):
-                raise
-
         if not document:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
-        to_update = document.update(data_to_update)
-        return self.collection.update_one(
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_to_update["updated_at"] = now
+        if "state" in data_to_update:
+            if not self.__state_change_valid(document.get("state"), data_to_update.get("state")):
+                raise InvalidStateChange(document.get("state"), data_to_update.get("state"))
+            if data_to_update.get("state") in ["COMPLETED", "CANCELLED"]:
+                data_to_update["completion_date"] = now
+        self.__manage_listed_values(document, "notes", data_to_update.pop("notes", []))
+        self.__manage_listed_values(document, "involved_parts", data_to_update.pop("involved_parts", []))
+        self.__manage_listed_values(document, "spare_parts", data_to_update.pop("spare_parts", []))
+        to_update = dict(document)
+        to_update.update(data_to_update)
+        self.collection.update_one(
             filter,
             {
-                "$set":to_update
+                "$set": to_update
             }
         )
+        return document
 
     def read_service_order(self, _id):
         filter = {"_id":_id}

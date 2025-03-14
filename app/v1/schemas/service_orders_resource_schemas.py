@@ -14,12 +14,11 @@ class ServiceOrderPostRequest(BaseModel):
     service_description: str
 
 class ServiceOrderPatchRequest(BaseModel):
-    state: str
-    scheduled_date: Optional[str]
-    completion_date: Optional[str]
-    service_date: str
+    state: Optional[str]
+    scheduled_date: Optional[str] = None
+    service_date: Optional[str] = None
     notes: Optional[List[str]] = []
-    technician: str
-    involved_parts: Optional[List[str]]
-    spare_parts: Optional[List[str]]
+    technician: Optional[str] = None
+    involved_parts: Optional[List[str]] = []
+    spare_parts: Optional[List[str]] = []
 
