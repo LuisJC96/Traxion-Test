@@ -16,7 +16,7 @@ async def create_service_order(
     flow = ServiceOrderFlow(client)
     return flow.create_service_order(request_body)
 
-@router.get("/service_orders/{service_order_id}")
+@router.get("/service-orders/{service_order_id}")
 @exception_handler()
 async def get_service_order(
         request: Request,
@@ -27,7 +27,7 @@ async def get_service_order(
     flow = ServiceOrderFlow(client)
     return flow.read_service_order(service_order_id)
 
-@router.patch("/service_orders/{service_order_id}")
+@router.patch("/service-orders/{service_order_id}")
 @exception_handler()
 async def update_service_order(
         request: Request,
@@ -39,7 +39,7 @@ async def update_service_order(
     flow = ServiceOrderFlow(client)
     return flow.update_service_order(service_order_id, request_body)
 
-@router.delete("/service_orders/{service_order_id}")
+@router.delete("/service-orders/{service_order_id}")
 @exception_handler()
 async def delete_service_order(
         request: Request,
