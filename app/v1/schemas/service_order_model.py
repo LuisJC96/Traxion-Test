@@ -1,4 +1,4 @@
-from app.v1.schemas.vehicle_schema import Vehicle
+from app.v1.schemas.vehicle_model import Vehicle
 from pydantic import BaseModel, Optional
 from datetime import datetime
 
@@ -21,7 +21,7 @@ class ServiceDetails(BaseModel):
 
 class ServiceOrder(BaseModel):
     id: str
-    status: str
+    state: str
     vehicle: Vehicle
     service_date: str
     customer: Customer

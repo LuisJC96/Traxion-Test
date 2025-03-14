@@ -39,13 +39,3 @@ async def update_service_order(
     flow = ServiceOrderFlow(client)
     return flow.update_service_order(service_order_id, request_body)
 
-@router.delete("/service-orders/{service_order_id}")
-@exception_handler()
-async def delete_service_order(
-        request: Request,
-        response: Response,
-        service_order_id: str,
-        client=Depends(MongoDBSingleton.get_client)
-):
-    flow = ServiceOrderFlow(client)
-    return flow.delete_service_order(service_order_id)

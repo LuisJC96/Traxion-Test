@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from app.v1.exceptions.entity_not_found import EntityNotFound
-from app.v1.schemas.service_order_schema import ServiceOrder
+from app.v1.schemas.service_order_model import ServiceOrder
+from tools.service_orders_states_machine import ServiceOrderStatesMachine
 
 class ServiceOrderFlow:
     def __init__(self, client: MongoClient):
@@ -16,6 +17,10 @@ class ServiceOrderFlow:
     def update_service_order(self, _id, data_to_update:dict):
         filter = {"_id": _id}
         document = self.collection.find_one(filter)
+        if "state" in data_to_update:
+            if not ServiceOrderStatesMachine().validate_transition(document.get("state"), data_to_update.get("state")):
+                raise
+
         if not document:
             raise EntityNotFound(self.db.name, self.collection.name, filter)
         to_update = document.update(data_to_update)
