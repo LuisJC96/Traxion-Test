@@ -4,11 +4,11 @@ from app.v1.resources import service_order_resource, vehicle_resource
 api_router = APIRouter(redirect_slashes=False)
 api_router.include_router(
     vehicle_resource.router,
-    prefix="/vehicle"
+    prefix="/vehicles"
 )
 api_router.include_router(
     service_order_resource.router,
-    prefix="/service-order"
+    prefix="/service-orders"
 )
 
 app = FastAPI()
