@@ -1,9 +1,5 @@
 from app.v1.flows.service_order_flow import ServiceOrderFlow
-from tests.mocks import SERVICE_ORDER
-from app.v1.flows.vehicle_flow import VehicleFlow
 from tests.mocks import VEHICLE, SERVICE_ORDER
-from app.v1.exceptions.entity_not_found import EntityNotFound
-from app.v1.exceptions.invalid_state_change import InvalidStateChange
 from unittest import mock
 
 
