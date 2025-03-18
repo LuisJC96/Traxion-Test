@@ -9,7 +9,7 @@ class MongoDBSingleton:
     @classmethod
     def get_client(cls) -> MongoClient:
         if cls._client is None:
-            connection_string = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+            connection_string = os.getenv("MONGODB_URI", "mongodb://host.docker.internal:27017")
             cls._client = MongoClient(connection_string)
         return cls._client
 
