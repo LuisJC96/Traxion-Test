@@ -1,5 +1,4 @@
-from uvicorn import Server
-from uvicorn.config import Config
+import uvicorn
 from fastapi import FastAPI
 from app.v1.router import app as app_v1
 from contextlib import asynccontextmanager
@@ -17,11 +16,4 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/v1", app_v1)
 
 if __name__ == "__main__":
-    conf = Config(
-        app="main:app",
-        port=5000,
-        host="0.0.0.0",
-        reload=True
-    )
-    server = Server(conf)
-    server.run()
+    uvicorn.run(app, port=5000)  # pragma: no cover
