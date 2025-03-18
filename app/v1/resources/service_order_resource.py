@@ -3,8 +3,16 @@ from fastapi import APIRouter, Depends, Request, Response
 from tools.mongodb_singleton import MongoDBSingleton
 from app.v1.flows.service_order_flow import ServiceOrderFlow
 from app.v1.schemas.service_orders_resource_schemas import ServiceOrderPostRequest, ServiceOrderPatchRequest
+from pymongo import MongoClient
 
 router = APIRouter()
+
+def get_mongo_client() -> MongoClient:
+    return MongoDBSingleton.get_client()
+
+def close_mongo_client() -> MongoClient:
+    return MongoDBSingleton.get_client()
+
 
 @router.post("")
 @exception_handler()
@@ -12,7 +20,7 @@ async def create_service_order(
         request: Request,
         response: Response,
         service_order: ServiceOrderPostRequest,
-        client = Depends(MongoDBSingleton.get_client)
+        client = Depends(get_mongo_client)
 ):
     flow = ServiceOrderFlow(client)
     return flow.create_service_order(service_order.model_dump())
@@ -25,7 +33,7 @@ async def get_service_order(
         request: Request,
         response: Response,
         service_order_id:str,
-        client = Depends(MongoDBSingleton.get_client)
+        client = Depends(get_mongo_client)
 ):
     flow = ServiceOrderFlow(client)
     return flow.read_service_order(service_order_id)
@@ -35,7 +43,7 @@ async def get_service_order(
 async def get_service_orders(
         request: Request,
         response: Response,
-        client = Depends(MongoDBSingleton.get_client)
+        client = Depends(get_mongo_client)
 ):
     flow = ServiceOrderFlow(client)
     filters = dict(request.query_params)
@@ -48,7 +56,7 @@ async def update_service_order(
         response: Response,
         service_order: ServiceOrderPatchRequest,
         service_order_id:str,
-        client = Depends(MongoDBSingleton.get_client)
+        client = Depends(get_mongo_client)
 ):
     flow = ServiceOrderFlow(client)
     return flow.update_service_order(service_order_id, service_order.model_dump())

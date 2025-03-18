@@ -14,7 +14,7 @@ VEHICLE = {
 }
 
 SERVICE_ORDER = {
-  "_id": "3aeb6883-19d9-4712-944d-dfe830ad39b1",
+  "_id": "abc",
   "state": "ASSIGNED",
   "vehicle": {
     "_id": "c1c60720-51c4-5319-8924-ff4e0c9e0ae8",

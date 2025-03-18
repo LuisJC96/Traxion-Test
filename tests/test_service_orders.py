@@ -1,20 +1,25 @@
 from app.v1.flows.service_order_flow import ServiceOrderFlow
 from tests.mocks import SERVICE_ORDER
 from app.v1.flows.vehicle_flow import VehicleFlow
-from tests.mocks import VEHICLE
+from tests.mocks import VEHICLE, SERVICE_ORDER
 from app.v1.exceptions.entity_not_found import EntityNotFound
 from app.v1.exceptions.invalid_state_change import InvalidStateChange
+from unittest import mock
 
 
 def test_get_service_order(client, mocker):
-    mock_service_order = mocker.patch.object(ServiceOrderFlow, "read_service_order")
-    mock_service_order.return_value = SERVICE_ORDER
-    response = client.get("/v1/service-orders/123")
+    mock_db = client.app.state.mongo_client.vehicle_management
+    mock_collection = mock_db.service_orders
+    mock_collection.find_one = mock.Mock(return_value=SERVICE_ORDER)
+
+    response = client.get("/v1/service-orders/abc")
     assert response.status_code == 200
 
 def test_get_service_order_not_found(client, mocker):
-    mocker.patch.object(ServiceOrderFlow, "read_service_order", side_effect=EntityNotFound("","",""))
-    response = client.get("/v1/service_orders/123")
+    mock_db = client.app.state.mongo_client.vehicle_management
+    mock_collection = mock_db.service_orders
+    mock_collection.find_one = mock.Mock(return_value=None)
+    response = client.get("/v1/service-orders/def")
     assert response.status_code == 404
 
 def test_create_service_order(client, mocker):
